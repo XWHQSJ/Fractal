@@ -1,0 +1,11 @@
+开发环境：
+    WINDOWS：Windows XP
+    VS：VS2008
+    EASYX：EasyX 2013霜降版
+
+运行游戏：
+    进入 Mario2，双击 maliao.exe 运行即可
+    或进入 Mario2，用 vs2008 运行 maliao.sln
+
+作者：
+    木子念念
