@@ -1,0 +1,3 @@
+[submodule "EasyX-Learning"]
+	path = EasyX-Learning
+	url = git@github.com:XWHQSJ/EasyX-Learning.git
