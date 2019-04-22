@@ -1,2 +1,2 @@
-# EasyX-Learning
-学习EasyX写的分形学程序
+# Fractal-Learning
+EasyX for Fractal Programs
