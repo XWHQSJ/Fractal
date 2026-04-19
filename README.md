@@ -13,9 +13,31 @@ A collection of classic fractal and graphics programs implemented in C++. Origin
 
 ---
 
+## Gallery
+
+<table>
+<tr>
+  <td align="center"><img src="docs/images/mandelbrot.png" width="280"/><br><b>Mandelbrot Set</b></td>
+  <td align="center"><img src="docs/images/barnsley.png" width="280"/><br><b>Barnsley Fern</b></td>
+  <td align="center"><img src="docs/images/koch.png" width="280"/><br><b>Koch Snowflake</b></td>
+</tr>
+<tr>
+  <td align="center"><img src="docs/images/sierpinski.png" width="280"/><br><b>Sierpinski Triangle</b></td>
+  <td align="center"><img src="docs/images/dragon.png" width="280"/><br><b>Dragon Curve</b></td>
+  <td align="center"><img src="docs/images/hilbert.png" width="280"/><br><b>Hilbert Curve</b></td>
+</tr>
+<tr>
+  <td align="center"><img src="docs/images/sierpinski-carpet.png" width="280"/><br><b>Sierpinski Carpet</b></td>
+  <td align="center"><img src="docs/images/arboresent.png" width="280"/><br><b>Arborescent Tree</b></td>
+  <td align="center"><img src="docs/images/cantor.png" width="280"/><br><b>Cantor Set</b></td>
+</tr>
+</table>
+
+---
+
 ## Try in Browser
 
-All demos compile to WebAssembly and run directly in the browser -- no install needed.
+**Live demos** (after first gh-pages deploy): **[All demos + math gallery](https://xwhqsj.github.io/Fractal/)**. Static gallery above.
 
 | Demo | Live Link |
 |------|-----------|
@@ -28,8 +50,6 @@ All demos compile to WebAssembly and run directly in the browser -- no install n
 | Sierpinski Triangle | [Launch](https://xwhqsj.github.io/Fractal/sierpinski.html) |
 | Sierpinski Carpet | [Launch](https://xwhqsj.github.io/Fractal/sierpinski_carpet.html) |
 | Starfield | [Launch](https://xwhqsj.github.io/Fractal/stars.html) |
-
-**[All demos + math gallery](https://xwhqsj.github.io/Fractal/)**
 
 ---
 
