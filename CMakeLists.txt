@@ -79,6 +79,13 @@ add_fractal_demo(hilbert      hilbert/hilbert.cpp)
 add_fractal_demo(lsystem_demo lsystem/demo.cpp)
 add_fractal_demo(mandelbrot_interactive mandelbrot/interactive.cpp)
 
+# ---- Screenshot generator (no SDL needed) ----
+if(NOT EMSCRIPTEN)
+    add_executable(render_screenshots qa/render_screenshots.cpp)
+    target_include_directories(render_screenshots PRIVATE ${CMAKE_SOURCE_DIR}/qa)
+    target_compile_features(render_screenshots PRIVATE cxx_std_17)
+endif()
+
 # ---- Tests (skip under Emscripten) ----
 if(NOT EMSCRIPTEN)
     enable_testing()
