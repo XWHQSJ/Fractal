@@ -1,5 +1,9 @@
+#ifdef EASYX_COMPAT_USE_SDL
+#include "../easyx_compat.h"
+#else
 #include <graphics.h>
 #include <conio.h>
+#endif
 #include <time.h>
 #include <math.h>
 #include <stdio.h>
@@ -97,7 +101,7 @@ int main()
 	initgraph(640, 480);
 
 	char s[10];
-	InputBox((LPTSTR)s, 10, _T("ÇëÊäÈëµü´úµÄ´ÎÊý"));
+	InputBox((LPTSTR)s, 10, _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½"));
 
 	int n;
 	sscanf(s, "%d", &n);

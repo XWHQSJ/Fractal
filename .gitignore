@@ -1,4 +1,6 @@
 # Build output
+build/
+Testing/
 Debug/
 Release/
 x64/
