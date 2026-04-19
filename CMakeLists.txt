@@ -7,7 +7,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ---- SDL2 backend (default on non-Windows) ----
 option(EASYX_COMPAT_USE_SDL "Use SDL2 backend instead of native EasyX" ON)
 
-if(EASYX_COMPAT_USE_SDL)
+# ---- Emscripten detection ----
+if(EMSCRIPTEN)
+    set(EASYX_COMPAT_USE_SDL ON CACHE BOOL "" FORCE)
+    # Emscripten provides SDL2 via -s USE_SDL=2
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s USE_SDL=2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_SDL=2 -s ALLOW_MEMORY_GROWTH=1")
+    # Each target produces .html + .js + .wasm
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif()
+
+if(EASYX_COMPAT_USE_SDL AND NOT EMSCRIPTEN)
     # Try cmake config first, then pkg-config fallback
     find_package(SDL2 QUIET)
     if(NOT SDL2_FOUND)
@@ -34,7 +45,9 @@ function(add_fractal_demo name source)
     target_compile_features(${name} PRIVATE cxx_std_17)
     if(EASYX_COMPAT_USE_SDL)
         target_compile_definitions(${name} PRIVATE EASYX_COMPAT_USE_SDL)
-        if(TARGET SDL2::SDL2)
+        if(EMSCRIPTEN)
+            # SDL2 is provided by emscripten flags; no extra link needed
+        elseif(TARGET SDL2::SDL2)
             target_link_libraries(${name} PRIVATE SDL2::SDL2 SDL2::SDL2main)
         elseif(TARGET PkgConfig::SDL2)
             target_link_libraries(${name} PRIVATE PkgConfig::SDL2)
@@ -66,6 +79,8 @@ add_fractal_demo(hilbert      hilbert/hilbert.cpp)
 add_fractal_demo(lsystem_demo lsystem/demo.cpp)
 add_fractal_demo(mandelbrot_interactive mandelbrot/interactive.cpp)
 
-# ---- Tests ----
-enable_testing()
-add_subdirectory(tests)
+# ---- Tests (skip under Emscripten) ----
+if(NOT EMSCRIPTEN)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

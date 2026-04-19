@@ -17,12 +17,15 @@ static int mandelbrot_escape(double cx, double cy) {
     return i;
 }
 
-static void draw_mandelbrot(double xmin, double xmax, double ymin, double ymax) {
+static double xmin_g = -2.0, xmax_g = 1.0, ymin_g = -1.2, ymax_g = 1.2;
+static bool running_g = true;
+
+static void draw_mandelbrot() {
     BeginBatchDraw();
     for (int py = 0; py < H; py++) {
         for (int px = 0; px < W; px++) {
-            double cx = xmin + (xmax - xmin) * px / W;
-            double cy = ymin + (ymax - ymin) * py / H;
+            double cx = xmin_g + (xmax_g - xmin_g) * px / W;
+            double cy = ymin_g + (ymax_g - ymin_g) * py / H;
             int n = mandelbrot_escape(cx, cy);
             COLORREF c = (n == MAX_ITER) ? BLACK : palette_color(n, MAX_ITER);
             putpixel(px, py, c);
@@ -31,45 +34,55 @@ static void draw_mandelbrot(double xmin, double xmax, double ymin, double ymax) 
     EndBatchDraw();
 }
 
+static void main_loop_iter() {
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            running_g = false;
+#ifdef __EMSCRIPTEN__
+            emscripten_cancel_main_loop();
+#endif
+        } else if (e.type == SDL_KEYDOWN) {
+            if (e.key.keysym.sym == SDLK_r) {
+                xmin_g = -2.0; xmax_g = 1.0; ymin_g = -1.2; ymax_g = 1.2;
+                draw_mandelbrot();
+            } else if (e.key.keysym.sym == SDLK_q ||
+                       e.key.keysym.sym == SDLK_ESCAPE) {
+                running_g = false;
+#ifdef __EMSCRIPTEN__
+                emscripten_cancel_main_loop();
+#endif
+            }
+        } else if (e.type == SDL_MOUSEBUTTONDOWN &&
+                   e.button.button == SDL_BUTTON_LEFT) {
+            int mx = e.button.x, my = e.button.y;
+            double cx = xmin_g + (xmax_g - xmin_g) * mx / W;
+            double cy = ymin_g + (ymax_g - ymin_g) * my / H;
+            double ww = (xmax_g - xmin_g) / 3.0;
+            double hh = (ymax_g - ymin_g) / 3.0;
+            xmin_g = cx - ww / 2.0;
+            xmax_g = cx + ww / 2.0;
+            ymin_g = cy - hh / 2.0;
+            ymax_g = cy + hh / 2.0;
+            draw_mandelbrot();
+        }
+    }
+}
+
 int main() {
     fractal_init();
     initgraph(W, H);
 
-    double xmin = -2.0, xmax = 1.0, ymin = -1.2, ymax = 1.2;
-    draw_mandelbrot(xmin, xmax, ymin, ymax);
+    draw_mandelbrot();
 
-    SDL_Event e;
-    bool running = true;
-    while (running) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                running = false;
-            } else if (e.type == SDL_KEYDOWN) {
-                if (e.key.keysym.sym == SDLK_r) {
-                    // Reset view
-                    xmin = -2.0; xmax = 1.0; ymin = -1.2; ymax = 1.2;
-                    draw_mandelbrot(xmin, xmax, ymin, ymax);
-                } else if (e.key.keysym.sym == SDLK_q ||
-                           e.key.keysym.sym == SDLK_ESCAPE) {
-                    running = false;
-                }
-            } else if (e.type == SDL_MOUSEBUTTONDOWN &&
-                       e.button.button == SDL_BUTTON_LEFT) {
-                // Zoom in 3x centered on click position
-                int mx = e.button.x, my = e.button.y;
-                double cx = xmin + (xmax - xmin) * mx / W;
-                double cy = ymin + (ymax - ymin) * my / H;
-                double ww = (xmax - xmin) / 3.0;
-                double hh = (ymax - ymin) / 3.0;
-                xmin = cx - ww / 2.0;
-                xmax = cx + ww / 2.0;
-                ymin = cy - hh / 2.0;
-                ymax = cy + hh / 2.0;
-                draw_mandelbrot(xmin, xmax, ymin, ymax);
-            }
-        }
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop_iter, 0, 1);
+#else
+    while (running_g) {
+        main_loop_iter();
         SDL_Delay(16);
     }
+#endif
 
     closegraph();
     return 0;

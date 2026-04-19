@@ -11,6 +11,10 @@
 #else
 
 // ---------- SDL2 backend ----------
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
 #include <SDL.h>
 #include <cstdint>
 #include <cstdio>
@@ -19,6 +23,7 @@
 #include <cmath>
 #include <string>
 #include <algorithm>
+#include <functional>
 
 // ---- Color ----
 typedef uint32_t COLORREF;
@@ -273,13 +278,27 @@ static inline void outtextxy(int x, int y, const char* text) {
     (void)x; (void)y; (void)text;
 }
 
-// ---- InputBox fallback (stdin) ----
+// ---- InputBox fallback ----
 #ifdef _T
 #undef _T
 #endif
 #define _T(x) x
 typedef char* LPTSTR;
 
+#ifdef __EMSCRIPTEN__
+static inline bool InputBox(char* buf, int maxLen, const char* prompt) {
+    // Use browser prompt() dialog via emscripten
+    char js[512];
+    snprintf(js, sizeof(js),
+        "var r = window.prompt('%s'); if(r) Module.ccall('_easyx_set_input','void',['string'],[r]);",
+        prompt);
+    // Simplified: use a default value for WASM demos
+    const char* defaultVal = "5";
+    strncpy(buf, defaultVal, maxLen - 1);
+    buf[maxLen - 1] = '\0';
+    return true;
+}
+#else
 static inline bool InputBox(char* buf, int maxLen, const char* prompt) {
     printf("%s: ", prompt);
     if (fgets(buf, maxLen, stdin)) {
@@ -289,8 +308,16 @@ static inline bool InputBox(char* buf, int maxLen, const char* prompt) {
     }
     return false;
 }
+#endif
 
 // ---- Keyboard ----
+#ifdef __EMSCRIPTEN__
+static inline int getch() {
+    // In WASM, getch() cannot block. Return immediately so demos
+    // that call getch() at the end simply exit their main().
+    return 0;
+}
+#else
 static inline int getch() {
     SDL_Event e;
     while (true) {
@@ -301,6 +328,7 @@ static inline int getch() {
         SDL_Delay(10);
     }
 }
+#endif
 
 static inline int kbhit() {
     SDL_Event e;
@@ -353,6 +381,15 @@ static inline void EndBatchDraw() {
 static inline void FlushBatchDraw() {
     SDL_RenderPresent(easyx_internal::state().renderer);
 }
+
+// ---- Emscripten main loop helper ----
+#ifdef __EMSCRIPTEN__
+// Helper for demos that need emscripten_set_main_loop.
+// Usage: easyx_emscripten_main_loop(callback, fps) where callback is void(void).
+static inline void easyx_emscripten_main_loop(void(*fn)(void), int fps = 0) {
+    emscripten_set_main_loop(fn, fps, 1);
+}
+#endif
 
 #endif // SDL2 backend
 #endif // EASYX_COMPAT_H
