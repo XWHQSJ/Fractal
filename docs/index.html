@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fractal Gallery</title>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
+    header p { color: var(--muted); margin-top: 0.5rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .card h3 { color: var(--accent); margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .card .math { font-size: 0.85rem; margin-top: 0.5rem; }
+    .card code {
+      font-size: 0.8rem;
+      background: var(--bg);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+    section h2 {
+      font-size: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-top: 2.5rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fractal Gallery</h1>
+    <p>A collection of classic fractal programs in C++ with cross-platform SDL2 rendering</p>
+  </header>
+  <main>
+    <section>
+      <h2>Classic Fractals</h2>
+      <div class="grid">
+
+        <div class="card">
+          <h3>Sierpinski Triangle</h3>
+          <p>Chaos-game point iteration converging to the Sierpinski gasket.</p>
+          <code>sierpinski/sierpinski.cpp</code>
+          <div class="math">
+            \( P_{n+1} = \frac{P_n + V_{rand}}{2} \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Sierpinski Carpet</h3>
+          <p>Recursive 9-subdivision with center square removed at each level.</p>
+          <code>sierpinski/sierpinskiCarpet.cpp</code>
+          <div class="math">
+            \( D = \frac{\ln 8}{\ln 3} \approx 1.893 \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Koch Snowflake</h3>
+          <p>Each line segment replaced by 4 segments forming an equilateral bump.</p>
+          <code>kochsnow/kochsnowByEasyX.cpp</code>
+          <div class="math">
+            \( D = \frac{\ln 4}{\ln 3} \approx 1.262 \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Cantor Set</h3>
+          <p>Remove the middle third of each segment, recursively.</p>
+          <code>cantor/cantor.cpp</code>
+          <div class="math">
+            \( D = \frac{\ln 2}{\ln 3} \approx 0.631 \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Arborescent Tree</h3>
+          <p>Recursive branching tree with brown-to-green gradient and random jitter.</p>
+          <code>arboresent/arboresent/arboresent.cpp</code>
+          <div class="math">
+            Branch: \( L_{n+1} = 0.72 \cdot L_n, \; \theta \pm 30° \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Rainbow</h3>
+          <p>HSL color gradient background with concentric rainbow arcs.</p>
+          <code>rainbow/rainbow.cpp</code>
+        </div>
+
+        <div class="card">
+          <h3>Starfield</h3>
+          <p>Animated star particles scrolling with variable speeds.</p>
+          <code>stars/stars.cpp</code>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <h2>New Fractals</h2>
+      <div class="grid">
+
+        <div class="card">
+          <h3>Mandelbrot Set</h3>
+          <p>Escape-time algorithm with 256-iteration rainbow palette.</p>
+          <code>mandelbrot/mandelbrot.cpp</code>
+          <div class="math">
+            \( z_{n+1} = z_n^2 + c, \quad |z| \leq 2 \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Interactive Mandelbrot</h3>
+          <p>Click to zoom 3x, press <kbd>R</kbd> to reset, <kbd>Q</kbd> to quit.</p>
+          <code>mandelbrot/interactive.cpp</code>
+        </div>
+
+        <div class="card">
+          <h3>Barnsley Fern</h3>
+          <p>4 weighted affine transforms iterated 200,000 times.</p>
+          <code>fern/fern.cpp</code>
+          <div class="math">
+            \( \begin{pmatrix} x' \\ y' \end{pmatrix} = A_i \begin{pmatrix} x \\ y \end{pmatrix} + b_i \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Dragon Curve</h3>
+          <p>Paper-folding fractal built by recursive turn sequence.</p>
+          <code>dragon/dragon.cpp</code>
+          <div class="math">
+            \( D = 2 \) (plane-filling)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Hilbert Curve</h3>
+          <p>Order-N space-filling curve with rainbow coloring.</p>
+          <code>hilbert/hilbert.cpp</code>
+          <div class="math">
+            Segments: \( 4^n - 1 \) for order \( n \)
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>L-System Interpreter</h3>
+          <p>General L-system engine with turtle graphics. Demos: Koch, Dragon, Plant.</p>
+          <code>lsystem/demo.cpp</code>
+          <div class="math">
+            Axiom \(\xrightarrow{\text{rules}^n}\) turtle instructions: \( F, +, -, [, ] \)
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <h2>Build</h2>
+      <pre style="background:var(--surface);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.9rem;margin-top:1rem;">
+brew install sdl2          # macOS
+cmake -B build -S .
+cmake --build build
+ctest --test-dir build     # run unit tests</pre>
+    </section>
+  </main>
+  <footer>
+    MIT License &mdash; Copyright &copy; 2019 XWHQSJ
+  </footer>
+</body>
+</html>
