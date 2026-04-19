@@ -5,10 +5,37 @@
 ![C++](https://img.shields.io/badge/language-C%2B%2B17-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 ![Platform: macOS/Linux/Windows](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)
+![WASM](https://img.shields.io/badge/WASM-Emscripten-orange)
 
 ## About
 
-A collection of classic fractal and graphics programs implemented in C++. Originally built with [EasyX](https://easyx.cn) (Windows), now cross-platform via an SDL2 compatibility layer.
+A collection of classic fractal and graphics programs implemented in C++. Originally built with [EasyX](https://easyx.cn) (Windows), now cross-platform via an SDL2 compatibility layer. Also compiles to WebAssembly via Emscripten for in-browser demos.
+
+---
+
+## Try in Browser
+
+All demos compile to WebAssembly and run directly in the browser -- no install needed.
+
+| Demo | Live Link |
+|------|-----------|
+| Mandelbrot (Interactive) | [Launch](https://xwhqsj.github.io/Fractal/mandelbrot_interactive.html) |
+| Mandelbrot Set | [Launch](https://xwhqsj.github.io/Fractal/mandelbrot.html) |
+| Barnsley Fern | [Launch](https://xwhqsj.github.io/Fractal/fern.html) |
+| Dragon Curve | [Launch](https://xwhqsj.github.io/Fractal/dragon.html) |
+| Hilbert Curve | [Launch](https://xwhqsj.github.io/Fractal/hilbert.html) |
+| Koch Snowflake | [Launch](https://xwhqsj.github.io/Fractal/kochsnow.html) |
+| Sierpinski Triangle | [Launch](https://xwhqsj.github.io/Fractal/sierpinski.html) |
+| Sierpinski Carpet | [Launch](https://xwhqsj.github.io/Fractal/sierpinski_carpet.html) |
+| Starfield | [Launch](https://xwhqsj.github.io/Fractal/stars.html) |
+
+**[All demos + math gallery](https://xwhqsj.github.io/Fractal/)**
+
+---
+
+## Download Prebuilt Binaries
+
+Prebuilt native binaries for Linux (x86_64) and macOS (ARM64) are available on the [Releases](https://github.com/XWHQSJ/Fractal/releases) page. Tag a version (`git tag v1.0.0 && git push --tags`) to trigger a release build.
 
 ---
 
@@ -74,6 +101,19 @@ ctest --test-dir build --output-on-failure
 ```
 
 10 unit tests covering Koch midpoint math, Mandelbrot escape counts, Sierpinski convergence, and L-system rule expansion.
+
+### WebAssembly Build (Emscripten)
+
+```bash
+# Install Emscripten SDK (if not already)
+# See https://emscripten.org/docs/getting_started/downloads.html
+
+emcmake cmake -B build-web -S . -DEASYX_COMPAT_USE_SDL=ON
+emmake cmake --build build-web -j
+# Each demo produces a .html + .js + .wasm triplet in build-web/
+```
+
+The GitHub Pages deployment happens automatically on push to `master` via the `gh-pages` workflow.
 
 ---
 
