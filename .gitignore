@@ -1,0 +1,50 @@
+# Build output
+Debug/
+Release/
+x64/
+x86/
+obj/
+bin/
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.iobj
+*.ipdb
+*.lib
+*.exp
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+*.vcxproj.user
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.cachefile
+*.VC.opendb
+
+# Visual C++ 6.0
+*.opt
+*.plg
+*.clw
+*.ncb
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
