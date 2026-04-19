@@ -1,0 +1,48 @@
+name: CI (Sanitizers)
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  sanitizer:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-14]
+        sanitizer: [asan, ubsan]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SDL2 (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libsdl2-dev
+
+      - name: Install SDL2 (macOS)
+        if: runner.os == 'macOS'
+        run: brew install sdl2
+
+      - name: Set sanitizer flags
+        id: san
+        run: |
+          if [ "${{ matrix.sanitizer }}" = "asan" ]; then
+            echo "flags=-fsanitize=address -fno-omit-frame-pointer" >> "$GITHUB_OUTPUT"
+          else
+            echo "flags=-fsanitize=undefined -fno-omit-frame-pointer" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure
+        run: |
+          cmake -B build -S . \
+            -DEASYX_COMPAT_USE_SDL=ON \
+            -DCMAKE_CXX_FLAGS="${{ steps.san.outputs.flags }}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${{ steps.san.outputs.flags }}"
+
+      - name: Build
+        run: cmake --build build -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
